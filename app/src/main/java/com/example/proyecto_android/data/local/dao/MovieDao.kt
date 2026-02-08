@@ -1,0 +1,22 @@
+package com.example.proyecto_android.data.local.dao
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.example.proyecto_android.data.local.entity.MovieEntity
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface MovieDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertarPelicula(pelicula: MovieEntity)
+
+    @Query("SELECT * FROM peliculas ORDER BY id DESC")
+    fun obtenerTodasLasPeliculas(): Flow<List<MovieEntity>>
+
+    @Delete
+    suspend fun eliminarPelicula(pelicula: MovieEntity)
+}

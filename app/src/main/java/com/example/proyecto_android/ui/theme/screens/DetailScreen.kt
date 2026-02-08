@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 
+//En esta pantalla monstramos el poster de la pelicula, el id, el nombre y la descripción oficial.
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
@@ -33,7 +34,9 @@ fun DetailScreen(
             )
         }
     ) { paddingValues ->
+        // Aquí se mostrará la información de la película
         Column(modifier = Modifier.padding(paddingValues).padding(16.dp)){
+            //Poster de la pelicula
             AsyncImage(
                 model = moviePoster ?: "",
                 contentDescription = movieTitle,

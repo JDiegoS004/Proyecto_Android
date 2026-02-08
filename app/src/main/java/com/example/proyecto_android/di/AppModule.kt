@@ -14,10 +14,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+//Módulo para la inyección de dependencias
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
+    //URL de la API
     private const val BASE_URL = "https://api.themoviedb.org/3/"
 
     @Provides

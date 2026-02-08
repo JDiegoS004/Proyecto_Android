@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.proyecto_android.data.local.entity.MovieEntity
 
+//Este composable es el usado  para representar las peliculas en la pantalla Home.
 @Composable
 fun FilmItem(
     movie: MovieEntity,
@@ -30,7 +31,7 @@ fun FilmItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
-                model = movie.poster_path, // Ya es URL completa
+                model = movie.poster_path,
                 contentDescription = movie.title,
                 modifier = Modifier
                     .size(60.dp)

@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets
 fun HomeScreen(navController: NavHostController) {
 
     val viewModel: MovieViewModel = hiltViewModel()
-    val peliculas by viewModel.peliculas.collectAsState()
+    val peliculas by viewModel.peliculas.collectAsState() // Lista de peliculas
     val cargando by viewModel.cargando.collectAsState()
     val error by viewModel.error.collectAsState()
 
@@ -34,6 +34,7 @@ fun HomeScreen(navController: NavHostController) {
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Blue)
             )
         },
+        //Boton flotante para añadir una pelicula nueva
         floatingActionButton = {
             FloatingActionButton(onClick = { viewModel.agregarPelicula() }) {
                 Icon(Icons.Default.Add, contentDescription = "Add films")
@@ -42,11 +43,13 @@ fun HomeScreen(navController: NavHostController) {
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
             when {
+                // Muestra un indicador de carga cuando la app está cargando datos
                 cargando -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator()
                     }
                 }
+                // Muestra mensaje si no hay peliculas añadidas
                 peliculas.isEmpty() -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text("No films yet")
@@ -69,13 +72,15 @@ fun HomeScreen(navController: NavHostController) {
                                     val poster = encode(movie.poster_path)
                                     val overview = encode(movie.overview)
 
+                                    // Al navegar a la pantalla de detalles
+                                    // se lleva los datos para enseñarlos en la DetailScreen
                                     navController.navigate("movie_detail/$id/$title/$poster/$overview")
                                 }
                             )
                         }
                     }
                 }
-            }
+            } // Mensaje de error si la app falla
             if (!error.isNullOrEmpty()) {
                 Text(
                     text = "Error: $error",

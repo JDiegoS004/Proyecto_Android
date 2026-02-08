@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Permiso para acceder a Internet, necesario para consumir la API de películas -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!--Aquí declaramos MovieApp -->
     <application
         android:name=".ui.theme.main.MovieApp"
         android:allowBackup="true"

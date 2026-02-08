@@ -5,7 +5,6 @@ import com.example.proyecto_android.data.local.entity.MovieEntity
 import com.example.proyecto_android.data.remote.datasource.ApiService
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
-import com.example.proyecto_android.data.mapper.toEntitySafe
 
 
 class MovieRepository @Inject constructor(
@@ -31,9 +30,5 @@ class MovieRepository @Inject constructor(
 
     suspend fun eliminarPelicula(movie: MovieEntity) {
         movieDao.eliminarPelicula(movie)
-    }
-
-    fun obtenerTodasLasPeliculas(): Flow<List<MovieEntity>> {
-        return movieDao.obtenerTodasLasPeliculas()
     }
 }

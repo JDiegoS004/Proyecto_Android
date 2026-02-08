@@ -8,6 +8,7 @@ import androidx.room.Query
 import com.example.proyecto_android.data.local.entity.MovieEntity
 import kotlinx.coroutines.flow.Flow
 
+//Métodos para acceder a la base de datos
 @Dao
 interface MovieDao {
 

@@ -12,10 +12,10 @@ composeBom = "2024.09.00"
 retrofit = "3.0.0"
 roomCommonJvm = "2.8.4"
 roomKtx = "2.8.4"
-hilt = "2.59.1"
-ksp = "2.0.21-1.0.27"
-navigationCompose = "2.9.7"
-uiGraphics = "1.10.2"
+hilt = "2.59.1"                 # Hilt para inyección de dependencias
+ksp = "2.0.21-1.0.27"           # Kotlin Symbol Processing, es necesario para Room y Hilt
+navigationCompose = "2.9.7"     # Navigation para Jetpack Compose
+uiGraphics = "1.10.2"           # Necesario para usar Hilt
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,21 +35,28 @@ androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-te
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "roomCommonJvm" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+# Retrofit
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit"}
-
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomKtx" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomKtx" }
 
+# Hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+# Navigation
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+# Necesario para usar Hilt
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
 
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+# Kotlin Symbol Processing, explicado anteriormente
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+# Habilita Hilt para inyección de dependencias en toda la app
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-ksp = { id = "com.google.devtools.ksp", version = "2.0.21-1.0.27" }
+
+#Conseguimos arreglar todos los errores de la aplicación reutilizando el codigo hecho hasta la fecha
+# y pasandolo a un proyecto nuevo ya que aunque cambiasemos las versiones nunca conseguimos encontrar el problema principal por el que no funcionaba

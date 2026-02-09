@@ -14,40 +14,53 @@ class MovieViewModel @Inject constructor(
     private val repositorio: MovieRepository
 ) : ViewModel() {
 
-    //Lista de peliculas que se muestran en la pantalla Home
+    // Lista de películas
     val peliculas = MutableStateFlow<List<MovieEntity>>(emptyList())
 
-    //Indicador de cuando la app está cargando datos
+    // Indicador de carga
     val cargando = MutableStateFlow(false)
-    //Mensaje de error si la aplicación falla
-    val error = MutableStateFlow<String?>(null)
 
-    //Metodo usado para añadir una nueva película desde la API, tanto a la lista como a la base de datos
     fun agregarPelicula() {
         viewModelScope.launch {
             cargando.value = true
-            error.value = null
             try {
-                val peliculaNueva = repositorio.getMovies().firstOrNull { apiMovie ->
+                val peliculasApi = repositorio.getMovies()
+                val peliculaNueva = peliculasApi.firstOrNull { apiMovie ->
                     peliculas.value.none { it.id == apiMovie.id }
                 }
                 peliculaNueva?.let {
-                    repositorio.insertarPelicula(it) //Guarda en la base de datos
-                    peliculas.value = peliculas.value + it //Actualiza la lista
+                    repositorio.insertarPelicula(it)
+                    peliculas.value = peliculas.value + it
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                error.value = "Error: ${e.message}" //Muestra un mensaje de error en caso de fallar
             } finally {
                 cargando.value = false
             }
         }
     }
-    //Metodo usado para borrar una pelicula de la lista y de la base de datos
+
+
+
     fun borrarPelicula(pelicula: MovieEntity) {
         viewModelScope.launch {
             repositorio.eliminarPelicula(pelicula)
             peliculas.value = peliculas.value - pelicula
+        }
+    }
+
+    fun editarNota(movieId: Int, nuevaNota: String) {
+        val listaActual = peliculas.value.toMutableList()
+        val index = listaActual.indexOfFirst { it.id == movieId }
+
+        if (index != -1) {
+            val peliculaActualizada = listaActual[index].copy(nota = nuevaNota)
+            listaActual[index] = peliculaActualizada
+            peliculas.value = listaActual
+
+            viewModelScope.launch {
+                repositorio.actualizarPelicula(peliculaActualizada)
+            }
         }
     }
 }

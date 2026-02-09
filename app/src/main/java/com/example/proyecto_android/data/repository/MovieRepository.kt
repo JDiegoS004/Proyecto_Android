@@ -20,7 +20,8 @@ class MovieRepository @Inject constructor(
                 title = it.title,
                 poster_path = it.poster_path?.let { path -> "https://image.tmdb.org/t/p/w500$path" } ?: "",
                 release_date = it.release_date ?: "",
-                overview = it.overview
+                overview = it.overview,
+                nota=""
             )
         }
     }
@@ -31,4 +32,9 @@ class MovieRepository @Inject constructor(
     suspend fun eliminarPelicula(movie: MovieEntity) {
         movieDao.eliminarPelicula(movie)
     }
+
+    suspend fun actualizarPelicula(movie: MovieEntity) {
+        movieDao.actualizarPelicula(movie)
+    }
+
 }

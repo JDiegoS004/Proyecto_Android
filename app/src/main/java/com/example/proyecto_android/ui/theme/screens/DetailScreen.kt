@@ -18,7 +18,8 @@ fun DetailScreen(
     movieId: Int?,
     movieTitle: String?,
     moviePoster: String?,
-    movieOverview: String?
+    movieOverview: String?,
+    movieNote: String?
 ) {
     Scaffold(
         topBar = {
@@ -57,6 +58,11 @@ fun DetailScreen(
             )
             Text(text = "Description:", fontSize = 20.sp)
             Text(text = movieOverview ?: "")
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+            Text(text = "Nota personal:", fontSize = 20.sp)
+            Text(text = movieNote ?: "")
         }
     }
 }

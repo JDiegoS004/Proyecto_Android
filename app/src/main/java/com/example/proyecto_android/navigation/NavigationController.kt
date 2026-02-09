@@ -31,27 +31,28 @@ fun NavigationController() {
 
         //Pantalla con detalles de la película
         composable(
-            route = "movie_detail/{movieId}/{movieTitle}/{moviePoster}/{movieOverview}",
+            route = "movie_detail/{movieId}/{movieTitle}/{moviePoster}/{movieOverview}/{movieNote}",
             arguments = listOf(
                 navArgument("movieId") { type = NavType.StringType },
                 navArgument("movieTitle") { type = NavType.StringType },
                 navArgument("moviePoster") { type = NavType.StringType },
-                navArgument("movieOverview") { type = NavType.StringType }
+                navArgument("movieOverview") { type = NavType.StringType },
+                navArgument("movieNote") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            // Gracias a esto obtenemos los argumentos de la pelicula pulsada en la pantalla Home
             val id = backStackEntry.arguments?.getString("movieId")?.toIntOrNull()
             val title = backStackEntry.arguments?.getString("movieTitle")?.let { Uri.decode(it) }
             val poster = backStackEntry.arguments?.getString("moviePoster")?.let { Uri.decode(it) }
             val overview = backStackEntry.arguments?.getString("movieOverview")?.let { Uri.decode(it) }
+            val note = backStackEntry.arguments?.getString("movieNote")?.let { Uri.decode(it) }
 
-            //Con esto llamamos a la pantalla DetailScreen con los argumentos anteriormente conseguidos
             DetailScreen(
                 navController = navController,
                 movieId = id,
                 movieTitle = title,
                 moviePoster = poster,
-                movieOverview = overview
+                movieOverview = overview,
+                movieNote = note
             )
         }
     }

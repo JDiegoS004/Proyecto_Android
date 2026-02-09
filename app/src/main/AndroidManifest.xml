@@ -4,6 +4,9 @@
 
     <!-- Permiso para acceder a Internet, necesario para consumir la API de películas -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Permiso para acceder a la red de datos, necesario para consumir la API de películas -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
     <!--Aquí declaramos MovieApp -->
     <application

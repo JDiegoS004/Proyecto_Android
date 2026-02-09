@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.proyecto_android.data.local.entity.MovieEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -16,7 +17,10 @@ interface MovieDao {
     suspend fun insertarPelicula(pelicula: MovieEntity)
 
     @Query("SELECT * FROM peliculas ORDER BY id DESC")
-    fun obtenerTodasLasPeliculas(): Flow<List<MovieEntity>>
+    fun obtenerPeliculas(): Flow<List<MovieEntity>>
+
+    @Update
+    suspend fun actualizarPelicula(movie: MovieEntity)
 
     @Delete
     suspend fun eliminarPelicula(pelicula: MovieEntity)

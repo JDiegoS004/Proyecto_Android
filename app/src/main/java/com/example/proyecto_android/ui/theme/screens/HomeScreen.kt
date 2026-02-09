@@ -10,83 +10,116 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
+import android.net.Uri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.proyecto_android.lista_peliculas.FilmItem
+import com.example.proyecto_android.utils.hasInternetConnection
 import com.example.proyecto_android.viewmodel.MovieViewModel
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavHostController) {
 
     val viewModel: MovieViewModel = hiltViewModel()
-    val peliculas by viewModel.peliculas.collectAsState() // Lista de peliculas
+    val peliculas by viewModel.peliculas.collectAsState()
     val cargando by viewModel.cargando.collectAsState()
-    val error by viewModel.error.collectAsState()
+
+    val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     Scaffold(
+        // Snackbar para mostrar mensajes
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+
+        // TopBar con título
         topBar = {
             TopAppBar(
                 title = { Text("Your Top Films", color = Color.White) },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Blue)
             )
         },
-        //Boton flotante para añadir una pelicula nueva
+
+        // Botón flotante para agregar nuevas películas
         floatingActionButton = {
-            FloatingActionButton(onClick = { viewModel.agregarPelicula() }) {
+            FloatingActionButton(
+                onClick = {
+                    // Aviso si no hay conexión a internet
+                    if (!hasInternetConnection(context)) {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = "No hay conexión a internet. Las imágenes pueden no cargarse 📡",
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                    // Llamada al ViewModel para agregar películas nuevas
+                    viewModel.agregarPelicula()
+                }
+            ) {
                 Icon(Icons.Default.Add, contentDescription = "Add films")
             }
         }
     ) { paddingValues ->
-        Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+
+            // Indicador mientras se cargan las películas
             when {
-                // Muestra un indicador de carga cuando la app está cargando datos
                 cargando -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
                         CircularProgressIndicator()
                     }
                 }
-                // Muestra mensaje si no hay peliculas añadidas
+
+                // Mensaje si no hay películas
                 peliculas.isEmpty() -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
                         Text("No films yet")
                     }
                 }
+
+                // Lista de películas
                 else -> {
-                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    LazyColumn {
                         items(peliculas) { movie ->
                             FilmItem(
                                 movie = movie,
+                                // Borrar película
                                 onDeleteClick = { viewModel.borrarPelicula(it) },
+                                // Editar nota personal
+                                onEditClick = { movieEditada, nuevaNota ->
+                                    viewModel.editarNota(movieEditada.id, nuevaNota)
+                                },
+                                // Navegar a DetailScreen
                                 onClick = {
-                                    val encode: (String?) -> String = {
-                                        URLEncoder.encode(it ?: "", StandardCharsets.UTF_8.toString())
-                                            .replace("+", "%20")
-                                    }
+                                    val idEncoded = movie.id.toString()
+                                    val titleEncoded = Uri.encode(movie.title)
+                                    val posterEncoded = Uri.encode(movie.poster_path)
+                                    val overviewEncoded = Uri.encode(movie.overview)
+                                    val noteEncoded = Uri.encode(movie.nota ?: "")
 
-                                    val id = movie.id
-                                    val title = encode(movie.title)
-                                    val poster = encode(movie.poster_path)
-                                    val overview = encode(movie.overview)
-
-                                    // Al navegar a la pantalla de detalles
-                                    // se lleva los datos para enseñarlos en la DetailScreen
-                                    navController.navigate("movie_detail/$id/$title/$poster/$overview")
+                                    navController.navigate(
+                                        "movie_detail/$idEncoded/$titleEncoded/$posterEncoded/$overviewEncoded/$noteEncoded"
+                                    )
                                 }
                             )
                         }
                     }
                 }
-            } // Mensaje de error si la app falla
-            if (!error.isNullOrEmpty()) {
-                Text(
-                    text = "Error: $error",
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.align(Alignment.TopCenter).padding(8.dp)
-                )
             }
         }
     }
